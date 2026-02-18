@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-GREEN=$'\033[32m'
+AQUA=$'\033[96m'
 ORANGE=$'\033[33m'
 PURPLE=$'\033[35m'
 CYAN=$'\033[36m'
-BLUE=$'\033[34m'
+BLUE=$'\033[94m'
 YELLOW=$'\033[93m'
 DIM=$'\033[2m'
 RED=$'\033[31m'
@@ -113,15 +113,15 @@ process_json() {
           elif echo "$content" | jq -e 'type == "array"' &>/dev/null; then
             local parsed
             parsed=$(echo "$content" | jq -r 'map(select(.type? == "text") | .text) | first // "" | gsub("<usage>[^<]*</usage>"; "") | gsub("\n"; " ")')
-            echo -e "${CYAN}${INDENT}→ ${parsed:0:$RESULT_LIMIT}${RESET}\n"
+            echo -e "${DIM}${INDENT}→ ${parsed:0:$RESULT_LIMIT}${RESET}\n"
           elif [[ "$content" == *$'\n'* ]]; then
             echo "$content" 2>/dev/null | head -10 | while IFS= read -r l; do
-              echo -e "${CYAN}${INDENT}→ ${l}${RESET}"
+              echo -e "${DIM}${INDENT}→ ${l}${RESET}"
             done
             [[ $(echo "$content" 2>/dev/null | wc -l) -gt 10 ]] && echo -e "${INDENT}..."
             echo ""
           else
-            echo -e "${CYAN}${INDENT}→ ${content:0:$RESULT_LIMIT}${RESET}\n"
+            echo -e "${DIM}${INDENT}→ ${content:0:$RESULT_LIMIT}${RESET}\n"
           fi
         fi
       fi
@@ -147,7 +147,7 @@ process_json() {
       if echo "$line" | jq -e '.message.content[]? | select(.type == "tool_use" and .name == "Read")' &>/dev/null; then
         local file_path
         file_path=$(echo "$line" | jq -r '.message.content[] | select(.type == "tool_use" and .name == "Read") | .input.file_path')
-        echo -e "\n${GREEN}[Read] ${file_path}${RESET}"
+        echo -e "\n${AQUA}[Read] ${file_path}${RESET}"
       fi
       # Handle Glob
       if echo "$line" | jq -e '.message.content[]? | select(.type == "tool_use" and .name == "Glob")' &>/dev/null; then
@@ -174,10 +174,16 @@ process_json() {
       fi
       # Handle Task
       if echo "$line" | jq -e '.message.content[]? | select(.type == "tool_use" and .name == "Task")' &>/dev/null; then
-        local prompt model
-        prompt=$(echo "$line" | jq -r '.message.content[] | select(.type == "tool_use" and .name == "Task") | .input.prompt // .input.description')
+        local description prompt model
+        description=$(echo "$line" | jq -r '.message.content[] | select(.type == "tool_use" and .name == "Task") | .input.description // empty')
+        prompt=$(echo "$line" | jq -r '.message.content[] | select(.type == "tool_use" and .name == "Task") | .input.prompt // empty')
         model=$(echo "$line" | jq -r '.message.content[] | select(.type == "tool_use" and .name == "Task") | .input.model // "sonnet"')
-        echo -e "\n${BLUE}[Task] \"${prompt:0:50}\" (${model})${RESET}"
+        echo -e "\n${BLUE}[Task] ${description} (${model})${RESET}"
+        if [[ -n "$prompt" ]]; then
+          echo "$prompt" | while IFS= read -r l; do
+            echo -e "${DIM}${INDENT}${l}${RESET}"
+          done
+        fi
       fi
       ;;
 
