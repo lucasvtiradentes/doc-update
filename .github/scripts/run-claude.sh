@@ -127,7 +127,7 @@ process_json() {
       # Handle TodoWrite
       if echo "$line" | jq -e '.message.content[]? | select(.type == "tool_use" and .name == "TodoWrite")' &>/dev/null; then
         echo -e "\n${YELLOW}[Todo]${RESET}"
-        echo "$line" | jq -r --arg g "$GREEN" --arg o "$ORANGE" --arg d "$DIM" --arg r "$RESET" --arg i "$INDENT" '
+        echo "$line" | jq -r --arg g "$AQUA" --arg o "$ORANGE" --arg d "$DIM" --arg r "$RESET" --arg i "$INDENT" '
           .message.content[] | select(.type == "tool_use" and .name == "TodoWrite") | .input.todos[] |
           $i + (if .status == "completed" then $g + "[x]" elif .status == "in_progress" then $o + "[~]" else $d + "[ ]" end) + $r + " " + .content
         '
