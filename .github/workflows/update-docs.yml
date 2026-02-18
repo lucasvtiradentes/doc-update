@@ -53,8 +53,10 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Install Claude Code
-        run: npm install -g @anthropic-ai/claude-code
+      - name: Install tools
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          pipx install doctrace
 
       - name: Download scripts
         run: |
