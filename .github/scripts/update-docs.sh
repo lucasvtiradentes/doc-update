@@ -15,15 +15,15 @@ setup_git() {
 }
 
 install_skill() {
-  echo "Looking for skill at: $SCRIPT_DIR/skills/update-docs.md"
-  if [[ -f "$SCRIPT_DIR/skills/update-docs.md" ]]; then
+  echo "Looking for skill at: $SCRIPT_DIR/commands/update-docs.md"
+  if [[ -f "$SCRIPT_DIR/commands/update-docs.md" ]]; then
     mkdir -p .claude/commands
-    cp "$SCRIPT_DIR/skills/update-docs.md" .claude/commands/update-docs.md
+    cp "$SCRIPT_DIR/commands/update-docs.md" .claude/commands/update-docs.md
     echo "Installed skill to .claude/commands/update-docs.md"
   else
     echo "WARNING: Skill file not found!"
     ls -la "$SCRIPT_DIR/" || true
-    ls -la "$SCRIPT_DIR/skills/" || true
+    ls -la "$SCRIPT_DIR/commands/" || true
   fi
 }
 

@@ -88,5 +88,5 @@ jobs:
           DOCS_PATH: ${{ inputs.docs_path }}
           GIT_REF: ${{ inputs.git_ref }}
           AUTO_MERGE_DAYS: ${{ inputs.auto_merge_days }}
-          SCRIPT_DIR: $WORK_DIR
-        run: $WORK_DIR/update-docs.sh
+          SCRIPT_DIR: ${{ env.WORK_DIR }}
+        run: ${{ env.WORK_DIR }}/update-docs.sh
