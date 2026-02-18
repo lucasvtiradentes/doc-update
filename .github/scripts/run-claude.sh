@@ -225,7 +225,7 @@ while IFS= read -r line; do
   if [[ $(echo "$line" | jq -r '.type // empty') == "result" ]]; then
     has_result=1
   fi
-  process_json "$line"
+  process_json "$line" || true
 done < <(claude --print --verbose --dangerously-skip-permissions --model "$MODEL" \
   --output-format stream-json --include-partial-messages "$@"; echo "EXIT:$?")
 
