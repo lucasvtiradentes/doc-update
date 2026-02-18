@@ -9,9 +9,9 @@ on:
         default: 'docs/'
         type: string
       mode:
-        description: 'Update mode: smart (uses doctrace), legacy (brute-force), or custom'
+        description: 'Update mode: affected (uses doctrace), all (brute-force), or custom'
         required: false
-        default: 'smart'
+        default: 'affected'
         type: string
       custom_skill:
         description: 'Path to custom skill file in caller repo (used when mode=custom)'
@@ -69,12 +69,12 @@ jobs:
               echo "ERROR: Custom skill not found at ${{ inputs.custom_skill }}"
               exit 1
             fi
-          elif [ "${{ inputs.mode }}" = "smart" ]; then
-            echo "Downloading smart skill..."
-            curl -sL https://raw.githubusercontent.com/lucasvtiradentes/doc-updater/main/skills/update-docs-smart.md -o /tmp/doc-updater/skills/update-docs.md
+          elif [ "${{ inputs.mode }}" = "affected" ]; then
+            echo "Downloading affected skill (uses doctrace)..."
+            curl -sL https://raw.githubusercontent.com/lucasvtiradentes/doc-updater/main/skills/update-docs-affected.md -o /tmp/doc-updater/skills/update-docs.md
           else
-            echo "Downloading legacy skill..."
-            curl -sL https://raw.githubusercontent.com/lucasvtiradentes/doc-updater/main/skills/update-docs-legacy.md -o /tmp/doc-updater/skills/update-docs.md
+            echo "Downloading all skill (brute-force)..."
+            curl -sL https://raw.githubusercontent.com/lucasvtiradentes/doc-updater/main/skills/update-docs-all.md -o /tmp/doc-updater/skills/update-docs.md
           fi
 
       - name: Update docs

@@ -20,7 +20,7 @@ jobs:
     uses: lucasvtiradentes/doc-updater/.github/workflows/update-docs.yml@main
     with:
       docs_path: docs/
-      mode: smart
+      mode: affected
     secrets:
       CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
 ```
@@ -30,14 +30,14 @@ jobs:
 | Input | Default | Description |
 |-------|---------|-------------|
 | `docs_path` | `docs/` | Path to documentation directory |
-| `mode` | `smart` | `smart`, `legacy`, or `custom` |
+| `mode` | `affected` | `affected`, `all`, or `custom` |
 | `custom_skill` | `.claude/commands/update-docs.md` | Path to custom skill (when mode=custom) |
 | `auto_merge_days` | `3` | Auto-merge PR after N days (0 to disable) |
-| `git_ref` | `--since-lock` | Git ref for smart mode |
+| `git_ref` | `--since-lock` | Git ref for affected mode |
 
 ## Modes
 
-### Smart Mode (recommended)
+### Affected Mode (recommended)
 
 Uses [doctrace](https://github.com/lucasvtiradentes/doctrace) to detect which docs are affected by code changes. Only updates what's needed.
 
@@ -45,7 +45,7 @@ Requirements:
 - `pip install doctrace`
 - Docs must have `related sources:` metadata
 
-### Legacy Mode
+### All Mode
 
 Reads ALL source files and compares against ALL docs. Use when doctrace is not set up.
 
