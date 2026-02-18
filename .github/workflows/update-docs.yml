@@ -23,8 +23,8 @@ on:
         required: true
 
 env:
-  BASE_URL: https://raw.githubusercontent.com/lucasvtiradentes/doc-updater/main
-  WORK_DIR: /tmp/doc-updater
+  BASE_URL: https://raw.githubusercontent.com/lucasvtiradentes/doc-update/main
+  WORK_DIR: /tmp/doc-update
 
 jobs:
   update-docs:

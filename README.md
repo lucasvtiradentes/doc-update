@@ -1,4 +1,4 @@
-# doc-updater
+# doc-update
 
 Reusable GitHub workflow that automatically updates documentation using Claude Code and doctrace.
 
@@ -17,7 +17,7 @@ on:
 
 jobs:
   update:
-    uses: lucasvtiradentes/doc-updater/.github/workflows/update-docs.yml@main
+    uses: lucasvtiradentes/doc-update/.github/workflows/update-docs.yml@main
     with:
       docs_path: docs/
     secrets:
