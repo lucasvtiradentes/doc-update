@@ -32,6 +32,10 @@ on:
       CLAUDE_CODE_OAUTH_TOKEN:
         required: true
 
+env:
+  BASE_URL: https://raw.githubusercontent.com/lucasvtiradentes/doc-updater/main
+  WORK_DIR: /tmp/doc-updater
+
 jobs:
   update-docs:
     name: Update documentation
@@ -54,27 +58,27 @@ jobs:
 
       - name: Download scripts
         run: |
-          mkdir -p /tmp/doc-updater/skills
-          curl -sL https://raw.githubusercontent.com/lucasvtiradentes/doc-updater/main/.github/scripts/run-claude.sh -o /tmp/doc-updater/run-claude.sh
-          curl -sL https://raw.githubusercontent.com/lucasvtiradentes/doc-updater/main/.github/scripts/update-docs.sh -o /tmp/doc-updater/update-docs.sh
-          chmod +x /tmp/doc-updater/*.sh
+          mkdir -p $WORK_DIR/commands
+          curl -sL $BASE_URL/.github/scripts/run-claude.sh -o $WORK_DIR/run-claude.sh
+          curl -sL $BASE_URL/.github/scripts/update-docs.sh -o $WORK_DIR/update-docs.sh
+          chmod +x $WORK_DIR/*.sh
 
       - name: Setup skill
         run: |
           if [ "${{ inputs.mode }}" = "custom" ]; then
             if [ -f "${{ inputs.custom_skill }}" ]; then
               echo "Using custom skill from: ${{ inputs.custom_skill }}"
-              cp "${{ inputs.custom_skill }}" /tmp/doc-updater/skills/update-docs.md
+              cp "${{ inputs.custom_skill }}" $WORK_DIR/commands/update-docs.md
             else
               echo "ERROR: Custom skill not found at ${{ inputs.custom_skill }}"
               exit 1
             fi
           elif [ "${{ inputs.mode }}" = "affected" ]; then
             echo "Downloading affected skill (uses doctrace)..."
-            curl -sL https://raw.githubusercontent.com/lucasvtiradentes/doc-updater/main/skills/update-docs-affected.md -o /tmp/doc-updater/skills/update-docs.md
+            curl -sL $BASE_URL/commands/update-docs-affected.md -o $WORK_DIR/commands/update-docs.md
           else
             echo "Downloading all skill (brute-force)..."
-            curl -sL https://raw.githubusercontent.com/lucasvtiradentes/doc-updater/main/skills/update-docs-all.md -o /tmp/doc-updater/skills/update-docs.md
+            curl -sL $BASE_URL/commands/update-docs-all.md -o $WORK_DIR/commands/update-docs.md
           fi
 
       - name: Update docs
@@ -84,5 +88,5 @@ jobs:
           DOCS_PATH: ${{ inputs.docs_path }}
           GIT_REF: ${{ inputs.git_ref }}
           AUTO_MERGE_DAYS: ${{ inputs.auto_merge_days }}
-          SCRIPT_DIR: /tmp/doc-updater
-        run: /tmp/doc-updater/update-docs.sh
+          SCRIPT_DIR: $WORK_DIR
+        run: $WORK_DIR/update-docs.sh
