@@ -111,10 +111,10 @@ process_json() {
             parsed=$(echo "$content" | jq -r 'map(select(.type? == "text") | .text) | first // "" | gsub("<usage>[^<]*</usage>"; "") | gsub("\n"; " ")')
             echo -e "${CYAN}${INDENT}→ ${parsed:0:$RESULT_LIMIT}${RESET}\n"
           elif [[ "$content" == *$'\n'* ]]; then
-            echo "$content" | head -10 | while IFS= read -r l; do
+            echo "$content" 2>/dev/null | head -10 | while IFS= read -r l; do
               echo -e "${CYAN}${INDENT}→ ${l}${RESET}"
             done
-            [[ $(echo "$content" | wc -l) -gt 10 ]] && echo -e "${INDENT}..."
+            [[ $(echo "$content" 2>/dev/null | wc -l) -gt 10 ]] && echo -e "${INDENT}..."
             echo ""
           else
             echo -e "${CYAN}${INDENT}→ ${content:0:$RESULT_LIMIT}${RESET}\n"
