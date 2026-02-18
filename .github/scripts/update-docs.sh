@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="${SCRIPT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
 AUTO_MERGE_DAYS="${AUTO_MERGE_DAYS:-3}"
 GIT_REF="${GIT_REF:---since-lock}"
 BRANCH=""
@@ -12,6 +12,14 @@ PR_AGE_DAYS=0
 setup_git() {
   git config user.name "github-actions[bot]"
   git config user.email "github-actions[bot]@users.noreply.github.com"
+}
+
+install_skill() {
+  if [[ -f "$SCRIPT_DIR/skills/update-docs.md" ]]; then
+    mkdir -p .claude/commands
+    cp "$SCRIPT_DIR/skills/update-docs.md" .claude/commands/update-docs.md
+    echo "Installed skill from $SCRIPT_DIR/skills/update-docs.md"
+  fi
 }
 
 find_existing_pr() {
@@ -87,6 +95,7 @@ main() {
     checkout_existing_branch
   fi
 
+  install_skill
   run_claude_update
   commit_changes || exit 0
 

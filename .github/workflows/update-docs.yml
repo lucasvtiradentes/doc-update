@@ -49,18 +49,18 @@ jobs:
 
       - name: Download scripts
         run: |
-          mkdir -p .github/scripts
-          curl -sL https://raw.githubusercontent.com/lucasvtiradentes/doc-updater/main/.github/scripts/run-claude.sh -o .github/scripts/run-claude.sh
-          curl -sL https://raw.githubusercontent.com/lucasvtiradentes/doc-updater/main/.github/scripts/update-docs.sh -o .github/scripts/update-docs.sh
-          chmod +x .github/scripts/*.sh
+          mkdir -p /tmp/doc-updater
+          curl -sL https://raw.githubusercontent.com/lucasvtiradentes/doc-updater/main/.github/scripts/run-claude.sh -o /tmp/doc-updater/run-claude.sh
+          curl -sL https://raw.githubusercontent.com/lucasvtiradentes/doc-updater/main/.github/scripts/update-docs.sh -o /tmp/doc-updater/update-docs.sh
+          chmod +x /tmp/doc-updater/*.sh
 
       - name: Download skill
         run: |
-          mkdir -p .claude/commands
+          mkdir -p /tmp/doc-updater/skills
           if [ "${{ inputs.mode }}" = "smart" ]; then
-            curl -sL https://raw.githubusercontent.com/lucasvtiradentes/doc-updater/main/skills/update-docs-smart.md -o .claude/commands/update-docs.md
+            curl -sL https://raw.githubusercontent.com/lucasvtiradentes/doc-updater/main/skills/update-docs-smart.md -o /tmp/doc-updater/skills/update-docs.md
           else
-            curl -sL https://raw.githubusercontent.com/lucasvtiradentes/doc-updater/main/skills/update-docs-legacy.md -o .claude/commands/update-docs.md
+            curl -sL https://raw.githubusercontent.com/lucasvtiradentes/doc-updater/main/skills/update-docs-legacy.md -o /tmp/doc-updater/skills/update-docs.md
           fi
 
       - name: Update docs
@@ -70,4 +70,5 @@ jobs:
           DOCS_PATH: ${{ inputs.docs_path }}
           GIT_REF: ${{ inputs.git_ref }}
           AUTO_MERGE_DAYS: ${{ inputs.auto_merge_days }}
-        run: .github/scripts/update-docs.sh
+          SCRIPT_DIR: /tmp/doc-updater
+        run: /tmp/doc-updater/update-docs.sh
