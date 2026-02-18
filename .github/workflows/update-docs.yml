@@ -8,23 +8,13 @@ on:
         required: false
         default: 'docs/'
         type: string
-      mode:
-        description: 'Update mode: affected (uses doctrace), all (brute-force), or custom'
-        required: false
-        default: 'affected'
-        type: string
-      custom_skill:
-        description: 'Path to custom skill file in caller repo (used when mode=custom)'
-        required: false
-        default: '.claude/commands/update-docs.md'
-        type: string
       auto_merge_days:
         description: 'Auto-merge PR after N days (0 to disable)'
         required: false
         default: 3
         type: number
       git_ref:
-        description: 'Git ref for smart mode (tag, branch, commit, or --since-lock)'
+        description: 'Git ref for affected detection (tag, branch, commit, or --since-lock)'
         required: false
         default: '--since-lock'
         type: string
@@ -65,23 +55,9 @@ jobs:
           curl -sL $BASE_URL/.github/scripts/update-docs.sh -o $WORK_DIR/update-docs.sh
           chmod +x $WORK_DIR/*.sh
 
-      - name: Setup skill
+      - name: Download skill
         run: |
-          if [ "${{ inputs.mode }}" = "custom" ]; then
-            if [ -f "${{ inputs.custom_skill }}" ]; then
-              echo "Using custom skill from: ${{ inputs.custom_skill }}"
-              cp "${{ inputs.custom_skill }}" $WORK_DIR/commands/update-docs.md
-            else
-              echo "ERROR: Custom skill not found at ${{ inputs.custom_skill }}"
-              exit 1
-            fi
-          elif [ "${{ inputs.mode }}" = "affected" ]; then
-            echo "Downloading affected skill (uses doctrace)..."
-            curl -sL $BASE_URL/commands/update-docs-affected.md -o $WORK_DIR/commands/update-docs.md
-          else
-            echo "Downloading all skill (brute-force)..."
-            curl -sL $BASE_URL/commands/update-docs-all.md -o $WORK_DIR/commands/update-docs.md
-          fi
+          curl -sL $BASE_URL/commands/update-docs.md -o $WORK_DIR/commands/update-docs.md
 
       - name: Update docs
         env:
