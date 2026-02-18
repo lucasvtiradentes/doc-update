@@ -27,13 +27,13 @@ jobs:
 
 ## Inputs
 
-| Input | Default | Description |
-|-------|---------|-------------|
-| `docs_path` | `docs/` | Path to documentation directory |
-| `mode` | `affected` | `affected`, `all`, or `custom` |
-| `custom_skill` | `.claude/commands/update-docs.md` | Path to custom skill (when mode=custom) |
-| `auto_merge_days` | `3` | Auto-merge PR after N days (0 to disable) |
-| `git_ref` | `--since-lock` | Git ref for affected mode |
+| Input            | Default                          | Description                              |
+|------------------|----------------------------------|------------------------------------------|
+| `docs_path`      | `docs/`                          | Path to documentation directory          |
+| `mode`           | `affected`                       | `affected`, `all`, or `custom`           |
+| `custom_skill`   | `.claude/commands/update-docs.md`| Path to custom skill (when mode=custom)  |
+| `auto_merge_days`| `3`                              | Auto-merge PR after N days (0 to disable)|
+| `git_ref`        | `--since-lock`                   | Git ref for affected mode                |
 
 ## Modes
 
@@ -75,9 +75,9 @@ jobs:
 
 ## Secrets Required
 
-| Secret | Description |
-|--------|-------------|
-| `CLAUDE_CODE_OAUTH_TOKEN` | Claude Code OAuth token |
+| Secret                   | Description            |
+|--------------------------|------------------------|
+| `CLAUDE_CODE_OAUTH_TOKEN`| Claude Code OAuth token|
 
 ## PR Behavior
 

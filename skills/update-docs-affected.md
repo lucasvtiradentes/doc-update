@@ -9,9 +9,9 @@ Updates documentation affected by code changes using doctrace for dependency det
 ```
 
 Examples:
-- `/update-docs v1.0.0` - docs affected since tag v1.0.0
-- `/update-docs HEAD~5` - docs affected by last 5 commits
-- `/update-docs main` - docs affected since diverging from main
+- `/update-docs v1.0.0`       - docs affected since tag v1.0.0
+- `/update-docs HEAD~5`       - docs affected by last 5 commits
+- `/update-docs main`         - docs affected since diverging from main
 - `/update-docs --since-lock` - docs affected since last lock (incremental)
 
 ## Instructions
@@ -22,10 +22,10 @@ Examples:
    - If doctrace is not installed, fall back to legacy mode (read all docs)
 
 2. Parse the JSON output to get:
-   - `direct_hits` - docs directly affected by changed sources
+   - `direct_hits`   - docs directly affected by changed sources
    - `indirect_hits` - docs affected via references
-   - `phases` - dependency order for processing
-   - `git.commits` - commits in range (for context)
+   - `phases`        - dependency order for processing
+   - `git.commits`   - commits in range (for context)
 
 3. For each affected doc:
    - Read the doc file
