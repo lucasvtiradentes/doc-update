@@ -21,10 +21,6 @@ CURRENT_TOOL=""
 process_json() {
   local line="$1"
 
-  if ! echo "$line" | jq -e . >/dev/null 2>&1; then
-    return 0
-  fi
-
   local type
   type=$(echo "$line" | jq -r '.type // empty' 2>/dev/null) || return
 
@@ -209,8 +205,36 @@ process_json() {
   esac
 }
 
-claude --print --verbose --dangerously-skip-permissions --model "$MODEL" \
-  --output-format stream-json --include-partial-messages "$@" | \
+total=0
+invalid=0
+has_result=0
+claude_exit=0
+
 while IFS= read -r line; do
-  [[ -n "$line" ]] && process_json "$line"
-done
+  [[ -z "$line" ]] && continue
+  if [[ "$line" == EXIT:* ]]; then
+    claude_exit="${line#EXIT:}"
+    continue
+  fi
+  ((total++)) || true
+  if ! echo "$line" | jq -e . >/dev/null 2>&1; then
+    ((invalid++)) || true
+    echo -e "${RED}[parse] invalid json (line $total): ${line:0:80}...${RESET}" >&2
+    continue
+  fi
+  if [[ $(echo "$line" | jq -r '.type // empty') == "result" ]]; then
+    has_result=1
+  fi
+  process_json "$line"
+done < <(claude --print --verbose --dangerously-skip-permissions --model "$MODEL" \
+  --output-format stream-json --include-partial-messages "$@"; echo "EXIT:$?")
+
+echo "" >&2
+echo -e "${DIM}[stats] total=$total invalid=$invalid has_result=$has_result exit=$claude_exit${RESET}" >&2
+
+if [[ "$has_result" != "1" ]]; then
+  echo -e "${YELLOW}[warn] no result message - claude may have crashed${RESET}" >&2
+fi
+if [[ "$invalid" -gt 0 ]]; then
+  echo -e "${YELLOW}[warn] $invalid lines with invalid json${RESET}" >&2
+fi
