@@ -15,10 +15,15 @@ setup_git() {
 }
 
 install_skill() {
+  echo "Looking for skill at: $SCRIPT_DIR/skills/update-docs.md"
   if [[ -f "$SCRIPT_DIR/skills/update-docs.md" ]]; then
     mkdir -p .claude/commands
     cp "$SCRIPT_DIR/skills/update-docs.md" .claude/commands/update-docs.md
-    echo "Installed skill from $SCRIPT_DIR/skills/update-docs.md"
+    echo "Installed skill to .claude/commands/update-docs.md"
+  else
+    echo "WARNING: Skill file not found!"
+    ls -la "$SCRIPT_DIR/" || true
+    ls -la "$SCRIPT_DIR/skills/" || true
   fi
 }
 
@@ -50,7 +55,14 @@ checkout_existing_branch() {
 }
 
 run_claude_update() {
+  echo "=== Running Claude update ==="
+  echo "SCRIPT_DIR: $SCRIPT_DIR"
+  echo "GIT_REF: $GIT_REF"
+  echo "Command: /update-docs $GIT_REF"
+  ls -la .claude/commands/ || true
+  echo "=== Claude output start ==="
   "$SCRIPT_DIR/run-claude.sh" "/update-docs $GIT_REF"
+  echo "=== Claude output end ==="
 }
 
 commit_changes() {
