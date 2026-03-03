@@ -11,7 +11,7 @@ setup_git() {
   git config user.name "github-actions[bot]"
   git config user.email "github-actions[bot]@users.noreply.github.com"
   mkdir -p .git/info
-  echo ".doctrace/" >> .git/info/exclude
+  echo ".doc_update/" >> .git/info/exclude
 }
 
 install_skill() {
@@ -45,8 +45,8 @@ find_existing_pr() {
 save_existing_pr_body() {
   if [[ "$IS_NEW_PR" == false && -n "$PR_NUMBER" ]]; then
     echo "Saving existing PR #$PR_NUMBER body for merge..."
-    mkdir -p .doctrace
-    gh pr view "$PR_NUMBER" --json body --jq '.body' > .doctrace/existing-pr-body.md 2>/dev/null || true
+    mkdir -p .doc_update
+    gh pr view "$PR_NUMBER" --json body --jq '.body' > .doc_update/existing-pr-body.md 2>/dev/null || true
   fi
 }
 
@@ -115,7 +115,7 @@ No changes needed - docs are up to date."
 }
 
 get_pr_title() {
-  local pr_title_file=".doctrace/pr-title.md"
+  local pr_title_file=".doc_update/pr-title.md"
   if [[ -f "$pr_title_file" ]]; then
     cat "$pr_title_file"
   else
@@ -124,7 +124,7 @@ get_pr_title() {
 }
 
 get_pr_body() {
-  local pr_body_file=".doctrace/pr-body.md"
+  local pr_body_file=".doc_update/pr-body.md"
 
   if [[ -f "$pr_body_file" ]]; then
     cat "$pr_body_file"

@@ -16,7 +16,7 @@ Examples:
 
 ## Instructions
 
-0. Create sync output directory: `.doctrace/syncs/<timestamp>/` (format: `YYYY-MM-DDTHH-MM-SS`)
+0. Create sync output directory: `.doc_update/syncs/<timestamp>/` (format: `YYYY-MM-DDTHH-MM-SS`)
 
 1. Run doctrace affected to get affected docs:
    ```bash
@@ -157,14 +157,14 @@ Remember: MINIMAL changes only. If something looks slightly off but isn't factua
 
 9. Generate consolidated report:
    - Write `{sync_dir}/_summary.md` with detailed analysis (internal reference)
-   - Write `.doctrace/pr-title.md` with a specific title (single line, max 72 chars):
+   - Write `.doc_update/pr-title.md` with a specific title (single line, max 72 chars):
      - Format: `docs: sync with {key theme summary}`
      - Example: `docs: sync with use-case refactor and github webhook`
      - Example: `docs: sync with new retry logic and error handling`
-   - Write `.doctrace/pr-body.md` for PR description:
+   - Write `.doc_update/pr-body.md` for PR description:
 
    **IMPORTANT: PR body merge logic**
-   - If `.doctrace/existing-pr-body.md` exists, this is a RERUN on an existing PR:
+   - If `.doc_update/existing-pr-body.md` exists, this is a RERUN on an existing PR:
      1. Read the existing PR body
      2. Append `---` separator + `## Run {N} - {YYYY-MM-DD}` header
      3. Generate same template content below for this run
@@ -287,7 +287,7 @@ git log --format="| %h | %an | %s |" {base}..{head}
     - Single line message only, no description
     - Format: `docs: update affected docs`
     - NO co-author trailer (no "Co-Authored-By")
-    - Do NOT stage `.doctrace/` - it's excluded from git
+    - Do NOT stage `.doc_update/` - it's excluded from git
 
 ## Notes
 
