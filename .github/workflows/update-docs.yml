@@ -8,15 +8,10 @@ on:
         required: false
         default: 'docs/'
         type: string
-      auto_merge_days:
-        description: 'Auto-merge PR after N days (0 to disable)'
-        required: false
-        default: 3
-        type: number
       git_ref:
-        description: 'Git ref for affected detection (tag, branch, commit, or --since-lock)'
+        description: 'Git ref for affected detection (tag, branch, commit)'
         required: false
-        default: '--since-lock'
+        default: 'docs-base'
         type: string
     secrets:
       CLAUDE_CODE_OAUTH_TOKEN:
@@ -30,7 +25,7 @@ jobs:
   update-docs:
     name: Update documentation
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 360
     permissions:
       contents: write
       pull-requests: write
@@ -47,11 +42,11 @@ jobs:
         run: |
           npm install -g @anthropic-ai/claude-code
           pipx install doctrace
+          pipx install claude-code-pretty
 
       - name: Download scripts
         run: |
           mkdir -p $WORK_DIR/commands
-          curl -sL $BASE_URL/.github/scripts/run-claude.sh -o $WORK_DIR/run-claude.sh
           curl -sL $BASE_URL/.github/scripts/update-docs.sh -o $WORK_DIR/update-docs.sh
           chmod +x $WORK_DIR/*.sh
 
@@ -65,7 +60,6 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DOCS_PATH: ${{ inputs.docs_path }}
           GIT_REF: ${{ inputs.git_ref }}
-          AUTO_MERGE_DAYS: ${{ inputs.auto_merge_days }}
           SCRIPT_DIR: ${{ env.WORK_DIR }}
         run: ${{ env.WORK_DIR }}/update-docs.sh
 
