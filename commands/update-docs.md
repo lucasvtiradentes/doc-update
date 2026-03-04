@@ -130,7 +130,7 @@ Remember: MINIMAL changes only. If something looks slightly off but isn't factua
    - If any change looks suspicious, spawn review agent to fix
 
 7. Run validation:
-   - Execute `doctrace info docs/` to check for broken refs
+   - Execute `doctrace info docs/ --ignore docs/index.md` to check for broken refs
    - If errors found, fix them before proceeding
 
 8. Gap analysis (using same git data from step 1):
