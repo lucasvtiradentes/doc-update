@@ -72,7 +72,7 @@ run_claude_update() {
   echo "Command: /update-docs $GIT_REF"
   ls -la .claude/commands/ || true
   echo "=== Claude output start ==="
-  claudep --model claude-opus-4-6 -p "/update-docs $GIT_REF"
+  claudep stream --model claude-opus-4-6 -p "/update-docs $GIT_REF"
   echo "=== Claude output end ==="
 }
 
